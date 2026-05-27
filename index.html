@@ -81,30 +81,111 @@ const ACA_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Amer
 // CAMP DATA — add new entries here as submissions are approved
 // ============================================================
 const CAMPS = [
-  { title:"Campfire Conflict Resolution", camp:"Lakeview Day Camp", state:"MN", tag:"empathy",
-    desc:"Structured campfire circles where campers navigate real disagreements with a trained facilitator. Each circle ends with a shared commitment the cabin decides together.",
-    video:"https://www.youtube.com/embed/dQw4w9WgXcQ", image:null },
-  { title:"The Courage Wall", camp:"Pine Ridge Adventure Camp", state:"VT", tag:"resilience",
-    desc:"Campers document a fear they faced each week on a card pinned to a communal wall. By session end it's a visual testament to collective bravery.",
-    video:null, image:"https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=80" },
-  { title:"Junior Council Program", camp:"Camp Horizon", state:"CO", tag:"leadership",
-    desc:"Rising 9th graders shadow senior staff across all departments for a week, then lead one all-camp event entirely on their own.",
-    video:"https://www.youtube.com/embed/dQw4w9WgXcQ", image:null },
-  { title:"No-Brag Zone", camp:"Wildwood Arts Camp", state:"ME", tag:"integrity",
-    desc:"A cabin norm-setting process focused on honesty and giving credit, sustained through weekly peer-accountability check-ins led by campers themselves.",
-    video:null, image:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" },
-  { title:"Relay for Everyone", camp:"Sunrise Sports Camp", state:"OH", tag:"teamwork",
-    desc:"All relay races are designed so every ability level is essential to winning. The scoring system makes inclusion a strategy, not just a value.",
-    video:null, image:"https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&q=80" },
-  { title:"Fail Forward Lab", camp:"Camp Innovate", state:"CA", tag:"resilience",
-    desc:"Engineering challenges where failure is the expected first outcome and iteration is the explicit goal. Counselors celebrate the best failure of the day at dinner.",
-    video:"https://www.youtube.com/embed/dQw4w9WgXcQ", image:null },
-  { title:"Kindness Bingo", camp:"Camp Firefly", state:"GA", tag:"empathy",
-    desc:"Weekly bingo cards with observable acts of kindness. Counselors nominate campers they catch doing good — winner reads their card aloud at Friday assembly.",
-    video:null, image:"https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=600&q=80" },
-  { title:"Leave Better Than You Found It", camp:"Blue Lake Camp", state:"MI", tag:"integrity",
-    desc:"A camp-wide ethic applied to spaces, relationships, and activities — reviewed nightly in cabin chats and tracked with a simple shared journal.",
-    video:null, image:"https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?w=600&q=80" },
+  {
+    title: "Campfire Conflict Resolution",
+    camp: "Lakeview Day Camp", state: "MN", tag: "empathy",
+    desc: "Structured campfire circles where campers navigate real disagreements with a trained facilitator. Each circle ends with a shared commitment the cabin decides together.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1508444845599-5c89863b1c44?w=600&q=80"
+  },
+  {
+    title: "The Courage Wall",
+    camp: "Pine Ridge Adventure Camp", state: "VT", tag: "resilience",
+    desc: "Campers document a fear they faced each week on a card pinned to a communal wall. By session end it becomes a visual testament to collective bravery that the whole camp celebrates.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=80"
+  },
+  {
+    title: "Junior Council Program",
+    camp: "Camp Horizon", state: "CO", tag: "leadership",
+    desc: "Rising 9th graders shadow senior staff across all departments for a week, then plan and lead one all-camp event entirely on their own with minimal adult intervention.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=600&q=80"
+  },
+  {
+    title: "No-Brag Zone",
+    camp: "Wildwood Arts Camp", state: "ME", tag: "integrity",
+    desc: "A cabin norm-setting process focused on honesty and giving credit, sustained through weekly peer-accountability check-ins led by campers themselves without counselor prompting.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80"
+  },
+  {
+    title: "Relay for Everyone",
+    camp: "Sunrise Sports Camp", state: "OH", tag: "teamwork",
+    desc: "All relay races are designed so every ability level is essential to winning. The scoring system makes inclusion a competitive strategy, not just a value posted on the wall.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&q=80"
+  },
+  {
+    title: "Fail Forward Lab",
+    camp: "Camp Innovate", state: "CA", tag: "resilience",
+    desc: "Engineering challenges where failure is the expected first outcome and iteration is the explicit goal. Counselors celebrate the best failure of the day at dinner each evening.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=600&q=80"
+  },
+  {
+    title: "Kindness Bingo",
+    camp: "Camp Firefly", state: "GA", tag: "empathy",
+    desc: "Weekly bingo cards filled with observable acts of kindness. Counselors nominate campers they catch doing good — the winner reads their card aloud at Friday assembly.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=600&q=80"
+  },
+  {
+    title: "Leave Better Than You Found It",
+    camp: "Blue Lake Camp", state: "MI", tag: "integrity",
+    desc: "A camp-wide ethic applied to spaces, relationships, and activities — reviewed nightly in cabin chats and tracked with a simple shared journal that travels cabin to cabin.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?w=600&q=80"
+  },
+  {
+    title: "Cross-Cabin Mentorship",
+    camp: "Valley Ridge Camp", state: "WI", tag: "leadership",
+    desc: "Oldest campers are paired with the youngest cabin for the full session. Structured weekly check-ins give junior mentors real responsibility and a relationship that lasts past camp.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?w=600&q=80"
+  },
+  {
+    title: "The Empathy Interview",
+    camp: "Camp Shalom", state: "PA", tag: "empathy",
+    desc: "Campers interview a peer from a different background using a structured set of questions, then share one thing that surprised them with the full cabin. Done twice per session.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=600&q=80"
+  },
+  {
+    title: "Promise Rocks",
+    camp: "Ridgecrest Summer Camp", state: "NC", tag: "integrity",
+    desc: "On opening day each camper writes a personal promise on a rock and keeps it in their bunk all session. On closing day they share whether they kept it — and what they learned if they didn't.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1567459169668-6e78f6e22e2e?w=600&q=80"
+  },
+  {
+    title: "Grit Week Challenge",
+    camp: "Northwoods Adventure Camp", state: "MN", tag: "resilience",
+    desc: "A five-day progressive challenge series that gets harder each day. Campers set a personal goal on day one and track their own progress — no rankings, no competition, just self-improvement.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1539794830467-1f1755804d13?w=600&q=80"
+  },
+  {
+    title: "One Boat, One Crew",
+    camp: "Chesapeake Bay Camp", state: "MD", tag: "teamwork",
+    desc: "Sailing teams are mixed daily so no camper sails with the same crew twice. Debrief sessions after each sail focus on communication and trust rather than speed or finishing place.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1500627964684-141351970a7f?w=600&q=80"
+  },
+  {
+    title: "Voices of Camp",
+    camp: "Camp Woodland", state: "NY", tag: "leadership",
+    desc: "A camper-run radio show produced weekly and broadcast across camp. Every role — host, producer, reporter — rotates so each camper leads at least one segment per session.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=600&q=80"
+  },
+  {
+    title: "The Apology Circle",
+    camp: "Camp Thunderbird", state: "SC", tag: "empathy",
+    desc: "A restorative practice where campers who have had a conflict are guided through a structured three-step conversation — share impact, listen fully, and decide together how to move forward.",
+    video: null,
+    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80"
+  }
 ];
 // ============================================================
 
@@ -116,7 +197,7 @@ function ytThumb(url) {
 }
 
 function cardMedia(c) {
-  const src = c.image || ytThumb(c.video||'');
+  const src = c.image || (c.video ? ytThumb(c.video) : null);
   if (src) return `<img class="card-img" src="${src}" alt="${c.title}" loading="lazy">`;
   return `<div class="card-img-placeholder"><img src="${ACA_LOGO}" alt="ACA"></div>`;
 }
@@ -173,7 +254,7 @@ function closeModal(e) {
 
 // ============================================================
 // AUTO-RESIZE — tells the Drupal iframe how tall to be
-// Update the allowedOrigins list when you move to production
+// Update allowedOrigins when moving to production
 // ============================================================
 const allowedOrigins = [
   'https://dev-aca-d9.pantheonsite.io',
