@@ -210,10 +210,8 @@ function openModal(i) {
   document.getElementById('modal-camp').textContent = `${c.camp} · ${c.state}`;
   document.getElementById('modal-desc').textContent = c.desc;
   const modal = document.getElementById('modal');
-  const scrollY = window.scrollY;
-  const vh = window.innerHeight;
-  modal.style.top = scrollY + 'px';
-  modal.style.height = vh + 'px';
+  modal.style.top = parentScrollOffset + 'px';
+  modal.style.height = parentVh + 'px';
   modal.classList.add('open');
 }
 
@@ -222,13 +220,24 @@ function closeModal(e) {
 }
 
 // ============================================================
-// AUTO-RESIZE
+// SCROLL + RESIZE — receive position from parent Drupal page
 // ============================================================
+let parentScrollOffset = 0;
+let parentVh = window.innerHeight;
+
 const allowedOrigins = [
   'https://dev-aca-d9.pantheonsite.io',
   'https://www.acacamps.org',
   'https://acacamps.org'
 ];
+
+window.addEventListener('message', function(e) {
+  if (!allowedOrigins.includes(e.origin)) return;
+  if (e.data && e.data.type === 'scroll') {
+    parentScrollOffset = Math.max(0, e.data.offsetInsideFrame);
+    parentVh = e.data.vh;
+  }
+});
 
 function sendHeight() {
   const height = document.body.scrollHeight;
