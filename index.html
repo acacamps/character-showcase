@@ -5,41 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Character Showcase — American Camp Association</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,700&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:system-ui,sans-serif;background:#fff;color:#1a1a18}
+    body{font-family:"DM Sans",sans-serif;background:#fff;color:#747474}
     .page{max-width:1100px;margin:0 auto;padding:1.5rem}
     .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1.5rem}
-    .controls input{flex:1;min-width:200px;padding:9px 13px;border:1px solid #d3d1c7;border-radius:6px;font-size:15px;background:#fff;color:#1a1a18}
-    .controls input:focus{outline:none;border-color:#555}
-    .pill{padding:6px 15px;border-radius:999px;border:1px solid #d3d1c7;background:#fff;font-size:13px;color:#555;cursor:pointer;transition:all .15s;white-space:nowrap}
-    .pill.active{background:#1a3a6b;border-color:#1a3a6b;color:#fff}
+    .controls input{flex:1;min-width:200px;padding:9px 13px;border:1px solid #dcdcdc;border-radius:24px;font-size:15px;background:#fff;color:#747474}
+    .controls input:focus{outline:none;border-color:#1f426f}
+    .pill{padding:6px 16px;border-radius:999px;border:1px solid #dcdcdc;background:#fff;font-size:13px;color:#555;cursor:pointer;transition:all .15s;white-space:nowrap}
+    .pill.active{background:#1f426f;border-color:#1f426f;color:#fff}
     .count{font-size:13px;color:#999;margin-left:auto}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px}
-    .card{background:#fff;border-radius:12px;overflow:hidden;cursor:pointer;transition:box-shadow .15s;border:1px solid #e8e6df}
-    .card:hover{box-shadow:0 4px 18px rgba(0,0,0,.09)}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+
+    .card{
+      display:flex;flex-direction:column;
+      width:100%;background:#fff;
+      border:1px solid #dcdcdc;
+      border-radius:16px;
+      box-shadow:0 2px 20px 0 rgba(142,165,164,0.103);
+      overflow:hidden;cursor:pointer;
+      transition:box-shadow .2s,transform .2s;
+      margin:0 auto;
+    }
+    .card:hover{box-shadow:0 6px 24px 0 rgba(142,165,164,.25);transform:translateY(-2px)}
+    .card:hover .card-body{background:#1f426f}
+    .card:hover .card-tag{color:rgba(255,255,255,.75)}
+    .card:hover .card-title{color:#fff}
+    .card:hover .card-footer{background:#1f426f;border-top-color:rgba(255,255,255,.15)}
+    .card:hover .card-camp{color:rgba(255,255,255,.75)}
+
     .card-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#eef0f4}
-    .card-img-placeholder{width:100%;aspect-ratio:16/9;background:#eef0f4;display:flex;align-items:center;justify-content:center}
-    .card-img-placeholder img{width:60%;opacity:.4}
-    .card-body{padding:16px 16px 20px}
-    .card-tag{font-size:12px;color:#1a3a6b;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}
-    .card-title{font-size:16px;font-weight:700;color:#1a1a18;line-height:1.35;margin-bottom:6px}
-    .card-camp{font-size:13px;color:#888;margin-bottom:0}
+    .card-img-placeholder{width:100%;aspect-ratio:16/9;background:#f5f5f5;display:flex;align-items:center;justify-content:center}
+    .card-img-placeholder img{width:55%;opacity:.35}
+
+    .card-body{padding:16px 18px 12px;flex:1;display:flex;flex-direction:column;transition:background .2s}
+    .card-tag{font-size:13px;color:#666;font-weight:400;margin-bottom:8px;transition:color .2s}
+    .card-title{font-size:17px;font-weight:700;color:#1f426f;line-height:1.3;flex:1;transition:color .2s}
+
+    .card-footer{padding:10px 18px 16px;border-top:1px solid #f0ede8;transition:background .2s,border-color .2s}
+    .card-camp{font-size:13px;color:#666;transition:color .2s}
+
     .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
     .modal-bg.open{display:flex}
-    .modal{background:#fff;border-radius:14px;max-width:660px;width:100%}
-    .modal-img-wrap{width:100%;aspect-ratio:16/9;border-radius:14px 14px 0 0;overflow:hidden;background:#eef0f4}
+    .modal{background:#fff;border-radius:16px;max-width:660px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.18)}
+    .modal-img-wrap{width:100%;aspect-ratio:16/9;border-radius:16px 16px 0 0;overflow:hidden;background:#eef0f4}
     .modal-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
     .modal-img-wrap iframe{width:100%;height:100%;border:none;display:block}
     .modal-body{padding:22px 24px 28px}
-    .modal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+    .modal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
     .modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;line-height:1;flex-shrink:0;margin-top:-2px}
     .modal-close:hover{color:#555}
-    .modal-tag{font-size:12px;color:#1a3a6b;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
-    .modal-title{font-size:20px;font-weight:700;color:#1a1a18;line-height:1.3;margin-bottom:4px}
-    .modal-camp{font-size:13px;color:#888;margin-bottom:16px}
+    .modal-tag{font-size:13px;color:#666;font-weight:400;margin-bottom:6px}
+    .modal-title{font-size:22px;font-weight:700;color:#1f426f;line-height:1.3;margin-bottom:4px}
+    .modal-camp{font-size:13px;color:#888;padding:10px 0 16px;border-bottom:1px solid #f0ede8;margin-bottom:16px}
     .modal-desc{font-size:15px;color:#3d3d3a;line-height:1.7}
     .empty{text-align:center;color:#999;font-size:14px;padding:3rem;grid-column:1/-1}
-  </style>
+</style>
 </head>
 <body>
 
@@ -81,111 +103,51 @@ const ACA_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Amer
 // CAMP DATA — add new entries here as submissions are approved
 // ============================================================
 const CAMPS = [
-  {
-    title: "Campfire Conflict Resolution",
-    camp: "Lakeview Day Camp", state: "MN", tag: "empathy",
-    desc: "Structured campfire circles where campers navigate real disagreements with a trained facilitator. Each circle ends with a shared commitment the cabin decides together.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1508444845599-5c89863b1c44?w=600&q=80"
-  },
-  {
-    title: "The Courage Wall",
-    camp: "Pine Ridge Adventure Camp", state: "VT", tag: "resilience",
-    desc: "Campers document a fear they faced each week on a card pinned to a communal wall. By session end it becomes a visual testament to collective bravery that the whole camp celebrates.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=80"
-  },
-  {
-    title: "Junior Council Program",
-    camp: "Camp Horizon", state: "CO", tag: "leadership",
-    desc: "Rising 9th graders shadow senior staff across all departments for a week, then plan and lead one all-camp event entirely on their own with minimal adult intervention.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=600&q=80"
-  },
-  {
-    title: "No-Brag Zone",
-    camp: "Wildwood Arts Camp", state: "ME", tag: "integrity",
-    desc: "A cabin norm-setting process focused on honesty and giving credit, sustained through weekly peer-accountability check-ins led by campers themselves without counselor prompting.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80"
-  },
-  {
-    title: "Relay for Everyone",
-    camp: "Sunrise Sports Camp", state: "OH", tag: "teamwork",
-    desc: "All relay races are designed so every ability level is essential to winning. The scoring system makes inclusion a competitive strategy, not just a value posted on the wall.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&q=80"
-  },
-  {
-    title: "Fail Forward Lab",
-    camp: "Camp Innovate", state: "CA", tag: "resilience",
-    desc: "Engineering challenges where failure is the expected first outcome and iteration is the explicit goal. Counselors celebrate the best failure of the day at dinner each evening.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=600&q=80"
-  },
-  {
-    title: "Kindness Bingo",
-    camp: "Camp Firefly", state: "GA", tag: "empathy",
-    desc: "Weekly bingo cards filled with observable acts of kindness. Counselors nominate campers they catch doing good — the winner reads their card aloud at Friday assembly.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=600&q=80"
-  },
-  {
-    title: "Leave Better Than You Found It",
-    camp: "Blue Lake Camp", state: "MI", tag: "integrity",
-    desc: "A camp-wide ethic applied to spaces, relationships, and activities — reviewed nightly in cabin chats and tracked with a simple shared journal that travels cabin to cabin.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?w=600&q=80"
-  },
-  {
-    title: "Cross-Cabin Mentorship",
-    camp: "Valley Ridge Camp", state: "WI", tag: "leadership",
-    desc: "Oldest campers are paired with the youngest cabin for the full session. Structured weekly check-ins give junior mentors real responsibility and a relationship that lasts past camp.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?w=600&q=80"
-  },
-  {
-    title: "The Empathy Interview",
-    camp: "Camp Shalom", state: "PA", tag: "empathy",
-    desc: "Campers interview a peer from a different background using a structured set of questions, then share one thing that surprised them with the full cabin. Done twice per session.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=600&q=80"
-  },
-  {
-    title: "Promise Rocks",
-    camp: "Ridgecrest Summer Camp", state: "NC", tag: "integrity",
-    desc: "On opening day each camper writes a personal promise on a rock and keeps it in their bunk all session. On closing day they share whether they kept it — and what they learned if they didn't.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1567459169668-6e78f6e22e2e?w=600&q=80"
-  },
-  {
-    title: "Grit Week Challenge",
-    camp: "Northwoods Adventure Camp", state: "MN", tag: "resilience",
-    desc: "A five-day progressive challenge series that gets harder each day. Campers set a personal goal on day one and track their own progress — no rankings, no competition, just self-improvement.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1539794830467-1f1755804d13?w=600&q=80"
-  },
-  {
-    title: "One Boat, One Crew",
-    camp: "Chesapeake Bay Camp", state: "MD", tag: "teamwork",
-    desc: "Sailing teams are mixed daily so no camper sails with the same crew twice. Debrief sessions after each sail focus on communication and trust rather than speed or finishing place.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1500627964684-141351970a7f?w=600&q=80"
-  },
-  {
-    title: "Voices of Camp",
-    camp: "Camp Woodland", state: "NY", tag: "leadership",
-    desc: "A camper-run radio show produced weekly and broadcast across camp. Every role — host, producer, reporter — rotates so each camper leads at least one segment per session.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=600&q=80"
-  },
-  {
-    title: "The Apology Circle",
-    camp: "Camp Thunderbird", state: "SC", tag: "empathy",
-    desc: "A restorative practice where campers who have had a conflict are guided through a structured three-step conversation — share impact, listen fully, and decide together how to move forward.",
-    video: null,
-    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80"
-  }
+  { title:"Campfire Conflict Resolution", camp:"Lakeview Day Camp", state:"MN", tag:"empathy",
+    desc:"Structured campfire circles where campers navigate real disagreements with a trained facilitator. Each circle ends with a shared commitment the cabin decides together.",
+    video:null, image:"https://images.unsplash.com/photo-1508444845599-5c89863b1c44?w=600&q=80" },
+  { title:"The Courage Wall", camp:"Pine Ridge Adventure Camp", state:"VT", tag:"resilience",
+    desc:"Campers document a fear they faced each week on a card pinned to a communal wall. By session end it becomes a visual testament to collective bravery that the whole camp celebrates.",
+    video:null, image:"https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=80" },
+  { title:"Junior Council Program", camp:"Camp Horizon", state:"CO", tag:"leadership",
+    desc:"Rising 9th graders shadow senior staff across all departments for a week, then plan and lead one all-camp event entirely on their own with minimal adult intervention.",
+    video:null, image:"https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=600&q=80" },
+  { title:"No-Brag Zone", camp:"Wildwood Arts Camp", state:"ME", tag:"integrity",
+    desc:"A cabin norm-setting process focused on honesty and giving credit, sustained through weekly peer-accountability check-ins led by campers themselves without counselor prompting.",
+    video:null, image:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" },
+  { title:"Relay for Everyone", camp:"Sunrise Sports Camp", state:"OH", tag:"teamwork",
+    desc:"All relay races are designed so every ability level is essential to winning. The scoring system makes inclusion a competitive strategy, not just a value posted on the wall.",
+    video:null, image:"https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&q=80" },
+  { title:"Fail Forward Lab", camp:"Camp Innovate", state:"CA", tag:"resilience",
+    desc:"Engineering challenges where failure is the expected first outcome and iteration is the explicit goal. Counselors celebrate the best failure of the day at dinner each evening.",
+    video:null, image:"https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=600&q=80" },
+  { title:"Kindness Bingo", camp:"Camp Firefly", state:"GA", tag:"empathy",
+    desc:"Weekly bingo cards filled with observable acts of kindness. Counselors nominate campers they catch doing good — the winner reads their card aloud at Friday assembly.",
+    video:null, image:"https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=600&q=80" },
+  { title:"Leave Better Than You Found It", camp:"Blue Lake Camp", state:"MI", tag:"integrity",
+    desc:"A camp-wide ethic applied to spaces, relationships, and activities — reviewed nightly in cabin chats and tracked with a simple shared journal that travels cabin to cabin.",
+    video:null, image:"https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?w=600&q=80" },
+  { title:"Cross-Cabin Mentorship", camp:"Valley Ridge Camp", state:"WI", tag:"leadership",
+    desc:"Oldest campers are paired with the youngest cabin for the full session. Structured weekly check-ins give junior mentors real responsibility and a relationship that lasts past camp.",
+    video:null, image:"https://images.unsplash.com/photo-1526676037777-05a232554f77?w=600&q=80" },
+  { title:"The Empathy Interview", camp:"Camp Shalom", state:"PA", tag:"empathy",
+    desc:"Campers interview a peer from a different background using a structured set of questions, then share one thing that surprised them with the full cabin. Done twice per session.",
+    video:null, image:"https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=600&q=80" },
+  { title:"Promise Rocks", camp:"Ridgecrest Summer Camp", state:"NC", tag:"integrity",
+    desc:"On opening day each camper writes a personal promise on a rock and keeps it in their bunk all session. On closing day they share whether they kept it — and what they learned if they didn't.",
+    video:null, image:"https://images.unsplash.com/photo-1567459169668-6e78f6e22e2e?w=600&q=80" },
+  { title:"Grit Week Challenge", camp:"Northwoods Adventure Camp", state:"MN", tag:"resilience",
+    desc:"A five-day progressive challenge series that gets harder each day. Campers set a personal goal on day one and track their own progress — no rankings, no competition, just self-improvement.",
+    video:null, image:"https://images.unsplash.com/photo-1539794830467-1f1755804d13?w=600&q=80" },
+  { title:"One Boat, One Crew", camp:"Chesapeake Bay Camp", state:"MD", tag:"teamwork",
+    desc:"Sailing teams are mixed daily so no camper sails with the same crew twice. Debrief sessions after each sail focus on communication and trust rather than speed or finishing place.",
+    video:null, image:"https://images.unsplash.com/photo-1500627964684-141351970a7f?w=600&q=80" },
+  { title:"Voices of Camp", camp:"Camp Woodland", state:"NY", tag:"leadership",
+    desc:"A camper-run radio show produced weekly and broadcast across camp. Every role — host, producer, reporter — rotates so each camper leads at least one segment per session.",
+    video:null, image:"https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=600&q=80" },
+  { title:"The Apology Circle", camp:"Camp Thunderbird", state:"SC", tag:"empathy",
+    desc:"A restorative practice where campers who have had a conflict are guided through a structured three-step conversation — share impact, listen fully, and decide together how to move forward.",
+    video:null, image:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" }
 ];
 // ============================================================
 
@@ -223,8 +185,10 @@ function render() {
     <div class="card" onclick="openModal(${CAMPS.indexOf(c)})">
       ${cardMedia(c)}
       <div class="card-body">
-        <div class="card-tag">${c.tag}</div>
+        <div class="card-tag">${c.tag.charAt(0).toUpperCase()+c.tag.slice(1)}</div>
         <div class="card-title">${c.title}</div>
+      </div>
+      <div class="card-footer">
         <div class="card-camp">${c.camp} &nbsp;·&nbsp; ${c.state}</div>
       </div>
     </div>
@@ -241,7 +205,7 @@ function openModal(i) {
     const src = c.image || ACA_LOGO;
     mw.innerHTML = `<img src="${src}" alt="${c.title}" style="width:100%;height:100%;object-fit:${c.image?'cover':'contain'};padding:${c.image?'0':'24px'};display:block">`;
   }
-  document.getElementById('modal-tag').textContent = c.tag;
+  document.getElementById('modal-tag').textContent = c.tag.charAt(0).toUpperCase()+c.tag.slice(1);
   document.getElementById('modal-title').textContent = c.title;
   document.getElementById('modal-camp').textContent = `${c.camp} · ${c.state}`;
   document.getElementById('modal-desc').textContent = c.desc;
@@ -253,8 +217,7 @@ function closeModal(e) {
 }
 
 // ============================================================
-// AUTO-RESIZE — tells the Drupal iframe how tall to be
-// Update allowedOrigins when moving to production
+// AUTO-RESIZE
 // ============================================================
 const allowedOrigins = [
   'https://dev-aca-d9.pantheonsite.io',
