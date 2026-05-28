@@ -80,22 +80,7 @@
   <div class="grid" id="grid"></div>
 </div>
 
-<div class="modal-bg" id="modal" onclick="closeModal(event)">
-  <div class="modal" id="modal-box">
-    <div class="modal-img-wrap" id="modal-media"></div>
-    <div class="modal-body">
-      <div class="modal-top">
-        <div>
-          <div class="modal-tag" id="modal-tag"></div>
-          <div class="modal-title" id="modal-title"></div>
-        </div>
-        <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
-      </div>
-      <div class="modal-camp" id="modal-camp"></div>
-      <div class="modal-desc" id="modal-desc"></div>
-    </div>
-  </div>
-</div>
+<!-- modal rendered by parent Drupal page -->
 
 <script>
 const ACA_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/American_Camp_Association_logo.svg/320px-American_Camp_Association_logo.svg.png";
@@ -199,52 +184,28 @@ function render() {
 
 function openModal(i) {
   const c = CAMPS[i];
-  const mw = document.getElementById('modal-media');
-  if (c.video) {
-    mw.innerHTML = `<iframe src="${c.video}" allowfullscreen></iframe>`;
-  } else {
-    const src = c.image || ACA_LOGO;
-    mw.innerHTML = `<img src="${src}" alt="${c.title}" style="width:100%;height:100%;object-fit:${c.image?'cover':'contain'};padding:${c.image?'0':'24px'};display:block">`;
-  }
-  document.getElementById('modal-tag').textContent = c.tag.charAt(0).toUpperCase()+c.tag.slice(1);
-  document.getElementById('modal-title').textContent = c.title;
-  document.getElementById('modal-camp').textContent = `${c.camp} · ${c.state}`;
-  document.getElementById('modal-desc').textContent = c.desc;
-  const modal = document.getElementById('modal');
-  modal.style.top = parentScrollOffset + 'px';
-  modal.style.height = parentVh + 'px';
-  const modalEstHeight = Math.min(600, parentVh * 0.85);
-  modal.style.paddingTop = Math.max(16, (parentVh - modalEstHeight) / 2) + 'px';
-  modal.classList.add('open');
-}
-
-function closeModal(e) {
-  if (e.target === document.getElementById('modal')) document.getElementById('modal').classList.remove('open');
+  allowedOrigins.forEach(origin => {
+    window.parent.postMessage({
+      type: 'openModal',
+      title: c.title,
+      tag: c.tag.charAt(0).toUpperCase()+c.tag.slice(1),
+      camp: `${c.camp} · ${c.state}`,
+      desc: c.desc,
+      image: c.image || null,
+      video: c.video || null
+    }, origin);
+  });
 }
 
 // ============================================================
-// SCROLL + RESIZE — receive position from parent Drupal page
 // ============================================================
-let parentScrollOffset = 0;
-let parentVh = window.innerHeight;
-
 const allowedOrigins = [
   'https://dev-aca-d9.pantheonsite.io',
   'https://www.acacamps.org',
   'https://acacamps.org'
 ];
 
-let parentNavHeight = 0;
-
-window.addEventListener('message', function(e) {
-  if (!allowedOrigins.includes(e.origin)) return;
-  if (e.data && e.data.type === 'scroll') {
-    parentNavHeight = e.data.navHeight || 0;
-    // Offset inside frame, pushed down by nav height
-    parentScrollOffset = Math.max(0, e.data.offsetInsideFrame + parentNavHeight);
-    parentVh = e.data.vh - parentNavHeight;
-  }
-});
+// Modal is rendered by the parent Drupal page via postMessage
 
 function sendHeight() {
   const height = document.body.scrollHeight;
