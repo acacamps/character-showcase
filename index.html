@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -212,6 +213,8 @@ function openModal(i) {
   const modal = document.getElementById('modal');
   modal.style.top = parentScrollOffset + 'px';
   modal.style.height = parentVh + 'px';
+  const modalEstHeight = Math.min(600, parentVh * 0.85);
+  modal.style.paddingTop = Math.max(16, (parentVh - modalEstHeight) / 2) + 'px';
   modal.classList.add('open');
 }
 
@@ -231,11 +234,15 @@ const allowedOrigins = [
   'https://acacamps.org'
 ];
 
+let parentNavHeight = 0;
+
 window.addEventListener('message', function(e) {
   if (!allowedOrigins.includes(e.origin)) return;
   if (e.data && e.data.type === 'scroll') {
-    parentScrollOffset = Math.max(0, e.data.offsetInsideFrame);
-    parentVh = e.data.vh;
+    parentNavHeight = e.data.navHeight || 0;
+    // Offset inside frame, pushed down by nav height
+    parentScrollOffset = Math.max(0, e.data.offsetInsideFrame + parentNavHeight);
+    parentVh = e.data.vh - parentNavHeight;
   }
 });
 
