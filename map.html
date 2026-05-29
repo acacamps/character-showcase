@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Character Showcase — American Camp Association</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"DM Sans",sans-serif;background:#fff;color:#747474;position:relative}
+    .page{max-width:1100px;margin:0 auto;padding:1.5rem}
+
+    /* ── VIEW TOGGLE ── */
+    .view-toggle{display:flex;gap:8px;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap}
+    .toggle-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:999px;border:1px solid #dcdcdc;background:#fff;font-size:13px;font-family:"DM Sans",sans-serif;color:#555;cursor:pointer;transition:all .15s}
+    .toggle-btn.active{background:#007e9e;border-color:#007e9e;color:#fff}
+    .toggle-btn svg{width:15px;height:15px;flex-shrink:0}
+    .view-divider{width:1px;height:20px;background:#dcdcdc;margin:0 4px}
+
+    /* ── CONTROLS ── */
+    .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1.5rem}
+    .controls input{flex:1;min-width:200px;padding:9px 13px;border:1px solid #dcdcdc;border-radius:24px;font-size:15px;font-family:"DM Sans",sans-serif;background:#fff;color:#1a1a18}
+    .controls input:focus{outline:none;border-color:#007e9e}
+    .pill{padding:6px 16px;border-radius:999px;border:1px solid #dcdcdc;background:#fff;font-size:13px;font-family:"DM Sans",sans-serif;color:#555;cursor:pointer;transition:all .15s;white-space:nowrap}
+    .pill.active{background:#007e9e;border-color:#007e9e;color:#fff}
+    .count{font-size:13px;color:#999;margin-left:auto}
+
+    /* ═══════════════════════════════════════════════
+       TOGGLE: uncomment either line below to hide
+       .controls { display: none; }   ← hides search + filter pills
+       .card-tag  { display: none; }  ← hides trait label on cards
+    ═══════════════════════════════════════════════ */
+
+    /* ── VIEWS ── */
+    .view{display:none}
+    .view.active{display:block}
+
+    /* ── MAP VIEW ── */
+    .map-container{background:#f8f7f4;border-radius:16px;overflow:hidden;margin-bottom:1.25rem}
+    .state-path{cursor:default;transition:opacity .15s}
+    .state-path.has-camps{cursor:pointer}
+    .state-path.has-camps:hover{opacity:.8}
+    .pin{cursor:pointer}
+    .pin:hover circle{r:11}
+    .map-panel{display:flex;gap:16px;margin-top:16px}
+    .map-sidebar{width:180px;flex-shrink:0;display:flex;flex-direction:column;gap:6px;max-height:360px;overflow-y:auto}
+    .state-btn{padding:7px 12px;border-radius:8px;border:0.5px solid #e8e6df;background:#fff;font-size:13px;font-family:"DM Sans",sans-serif;color:#555;cursor:pointer;text-align:left;transition:all .15s;display:flex;justify-content:space-between;align-items:center}
+    .state-btn:hover,.state-btn.active{border-color:#007e9e;color:#007e9e}
+    .state-count{font-weight:700;color:#007e9e;font-size:12px}
+    .map-cards{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;align-content:start}
+    .map-stat{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:13px;color:#747474}
+    .map-stat-pill{background:#007e9e;color:#fff;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700}
+
+    /* ── CARD GRID VIEW ── */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+
+    /* ── SHARED CARD STYLES ── */
+    .card{display:flex;flex-direction:column;width:100%;background:#fff;border:1px solid #dcdcdc;border-radius:16px;box-shadow:0 2px 20px 0 rgba(142,165,164,0.103);overflow:hidden;cursor:pointer;transition:background .2s,border-color .2s,box-shadow .2s;margin:0 auto}
+    .card:hover{background:#007e9e;border-color:#007e9e;box-shadow:0 2px 20px 0 rgba(142,165,164,0.103)}
+    .card:hover .card-tag{color:rgba(255,255,255,.8)}
+    .card:hover .card-title{color:#fff}
+    .card:hover .card-body{background:#007e9e}
+    .card:hover .card-footer{background:#007e9e}
+    .card:hover .card-camp{color:rgba(255,255,255,.8)}
+    .card-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#eef0f4}
+    .card-img-placeholder{width:100%;aspect-ratio:16/9;background:#f5f5f5;display:flex;align-items:center;justify-content:center}
+    .card-img-placeholder img{width:55%;opacity:.35}
+    .card-body{padding:16px 18px 12px;flex:1;display:flex;flex-direction:column;transition:background .2s}
+    .card-tag{font-size:13px;color:#747474;font-weight:400;margin-bottom:8px;transition:color .2s}
+    .card-title{font-size:1.125rem;font-weight:700;color:#041133;line-height:1.4375rem;flex:1;transition:color .2s}
+    .card-footer{padding:10px 18px 16px;border-top:1px solid transparent;transition:background .2s}
+    .card-camp{font-size:13px;color:#747474;transition:color .2s}
+
+    /* ── MAP MINI CARD (no aspect ratio, smaller) ── */
+    .mini-card{display:flex;flex-direction:column;background:#fff;border:1px solid #dcdcdc;border-radius:12px;box-shadow:0 2px 12px rgba(142,165,164,.1);overflow:hidden;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+    .mini-card:hover{border-color:#007e9e;box-shadow:0 4px 16px rgba(0,126,158,.15)}
+    .mini-card img{width:100%;height:90px;object-fit:cover;display:block;background:#eef0f4}
+    .mini-card-body{padding:10px 12px 12px}
+    .mini-tag{font-size:11px;color:#747474;margin-bottom:4px}
+    .mini-title{font-size:13px;font-weight:700;color:#041133;line-height:1.3;margin-bottom:3px}
+    .mini-camp{font-size:11px;color:#747474}
+
+    .empty{text-align:center;color:#999;font-size:14px;padding:3rem;grid-column:1/-1}
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- VIEW TOGGLE -->
+  <div class="view-toggle">
+    <button class="toggle-btn active" id="btn-map" onclick="switchView('map')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l6-4 6 4 6-4v14l-6 4-6-4-6 4V7z"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="7" x2="15" y2="21"/></svg>
+      Map view
+    </button>
+    <button class="toggle-btn" id="btn-grid" onclick="switchView('grid')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Grid view
+    </button>
+    <div class="view-divider"></div>
+    <span class="count" id="main-count">15 programs</span>
+  </div>
+
+  <!-- MAP VIEW -->
+  <div class="view active" id="view-map">
+    <div class="map-stat">
+      <span class="map-stat-pill" id="map-count">15 programs</span>
+      <span id="map-label">across 12 states — click a state or pin to filter</span>
+    </div>
+    <div class="map-container">
+      <svg id="map-svg" viewBox="0 0 900 560" width="100%"></svg>
+    </div>
+    <div class="map-panel">
+      <div class="map-sidebar" id="map-sidebar"></div>
+      <div class="map-cards" id="map-cards"></div>
+    </div>
+  </div>
+
+  <!-- GRID VIEW -->
+  <div class="view" id="view-grid">
+    <div class="controls">
+      <input type="text" id="search" placeholder="Search camps or programs…" oninput="renderGrid()">
+      <button class="pill active" data-tag="all" onclick="setTag(this)">All</button>
+      <button class="pill" data-tag="resilience" onclick="setTag(this)">Resilience</button>
+      <button class="pill" data-tag="empathy" onclick="setTag(this)">Empathy</button>
+      <button class="pill" data-tag="leadership" onclick="setTag(this)">Leadership</button>
+      <button class="pill" data-tag="integrity" onclick="setTag(this)">Integrity</button>
+      <button class="pill" data-tag="teamwork" onclick="setTag(this)">Teamwork</button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+</div>
+
+<!-- modal lives in Drupal embed — see embed code -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+const ACA_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/American_Camp_Association_logo.svg/320px-American_Camp_Association_logo.svg.png";
+
+// ============================================================
+// CAMP DATA — add new entries here as submissions are approved
+// ============================================================
+const CAMPS = [
+  { title:"Campfire Conflict Resolution", camp:"Lakeview Day Camp", state:"MN", tag:"empathy",
+    desc:"Structured campfire circles where campers navigate real disagreements with a trained facilitator. Each circle ends with a shared commitment the cabin decides together.",
+    video:null, image:"https://acacamps.box.com/shared/static/x804azu69gd16omxx91i4twqrs35nfft.jpg",
+    link:"https://www.acacamps.org", linkLabel:"Learn More" },
+  { title:"The Courage Wall", camp:"Pine Ridge Adventure Camp", state:"VT", tag:"resilience",
+    desc:"Campers document a fear they faced each week on a card pinned to a communal wall. By session end it becomes a visual testament to collective bravery that the whole camp celebrates. What started as a simple bulletin board activity has grown into one of the most anticipated traditions at Pine Ridge — parents have written to say their kids talk about their Courage Wall card all year long. Counselors report that campers who struggle early in the session often point to their card as the moment things shifted for them. The wall is photographed on closing day and a print is mailed to every camper as a keepsake. This year, over 200 cards covered the wall by the final week.",
+    video:null, image:"https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=80",
+    link:"https://www.pineridgeadventurecamp.org", linkLabel:"Visit Camp Website" },
+  { title:"Junior Council Program", camp:"Camp Horizon", state:"CO", tag:"leadership",
+    desc:"Rising 9th graders shadow senior staff across all departments for a week, then plan and lead one all-camp event entirely on their own with minimal adult intervention.",
+    video:"https://www.youtube.com/embed/dQw4w9WgXcQ", image:null,
+    link:"https://www.acacamps.org", linkLabel:"Learn More" },
+  { title:"No-Brag Zone", camp:"Wildwood Arts Camp", state:"ME", tag:"integrity",
+    desc:"A cabin norm-setting process focused on honesty and giving credit, sustained through weekly peer-accountability check-ins led by campers themselves without counselor prompting.",
+    video:null, image:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80",
+    link:"https://www.acacamps.org/character", linkLabel:"Read the Research" },
+  { title:"Relay for Everyone", camp:"Sunrise Sports Camp", state:"OH", tag:"teamwork",
+    desc:"All relay races are designed so every ability level is essential to winning. The scoring system makes inclusion a competitive strategy, not just a value posted on the wall.",
+    video:null, image:"https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&q=80",
+    link:null, linkLabel:null },
+  { title:"Fail Forward Lab", camp:"Camp Innovate", state:"CA", tag:"resilience",
+    desc:"Engineering challenges where failure is the expected first outcome and iteration is the explicit goal. Counselors celebrate the best failure of the day at dinner each evening.",
+    video:null, image:"https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=600&q=80",
+    link:null, linkLabel:null },
+  { title:"Kindness Bingo", camp:"Camp Firefly", state:"GA", tag:"empathy",
+    desc:"Weekly bingo cards filled with observable acts of kindness. Counselors nominate campers they catch doing good — the winner reads their card aloud at Friday assembly.",
+    video:null, image:"https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=600&q=80",
+    link:null, linkLabel:null },
+  { title:"Leave Better Than You Found It", camp:"Blue Lake Camp", state:"MI", tag:"integrity",
+    desc:"A camp-wide ethic applied to spaces, relationships, and activities — reviewed nightly in cabin chats and tracked with a simple shared journal that travels cabin to cabin.",
+    video:null, image:"https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?w=600&q=80",
+    link:null, linkLabel:null },
+  { title:"Cross-Cabin Mentorship", camp:"Valley Ridge Camp", state:"WI", tag:"leadership",
+    desc:"Oldest campers are paired with the youngest cabin for the full session. Structured weekly check-ins give junior mentors real responsibility and a relationship that lasts past camp.",
+    video:null, image:"https://images.unsplash.com/photo-1526676037777-05a232554f77?w=600&q=80",
+    link:null, linkLabel:null },
+  { title:"The Empathy Interview", camp:"Camp Shalom", state:"PA", tag:"empathy",
+    desc:"Campers interview a peer from a different background using a structured set of questions, then share one thing that surprised them with the full cabin. Done twice per session.",
+    video:null, image:"https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=600&q=80",
+    link:null, linkLabel:null },
+  { title:"Promise Rocks", camp:"Ridgecrest Summer Camp", state:"NC", tag:"integrity",
+    desc:"On opening day each camper writes a personal promise on a rock and keeps it in their bunk all session. On closing day they share whether they kept it — and what they learned if they didn't.",
+    video:null, image:"https://images.unsplash.com/photo-1567459169668-6e78f6e22e2e?w=600&q=80",
+    link:null, linkLabel:null },
+  { title:"Grit Week Challenge", camp:"Northwoods Adventure Camp", state:"MN", tag:"resilience",
+    desc:"A five-day progressive challenge series that gets harder each day. Campers set a personal goal on day one and track their own progress — no rankings, no competition, just self-improvement.",
+    video:null, image:"https://images.unsplash.com/photo-1539794830467-1f1755804d13?w=600&q=80",
+    link:null, linkLabel:null },
+  { title:"One Boat, One Crew", camp:"Chesapeake Bay Camp", state:"MD", tag:"teamwork",
+    desc:"Sailing teams are mixed daily so no camper sails with the same crew twice. Debrief sessions after each sail focus on communication and trust rather than speed or finishing place.",
+    video:null, image:"https://images.unsplash.com/photo-1500627964684-141351970a7f?w=600&q=80",
+    link:null, linkLabel:null },
+  { title:"Voices of Camp", camp:"Camp Woodland", state:"NY", tag:"leadership",
+    desc:"A camper-run radio show produced weekly and broadcast across camp. Every role — host, producer, reporter — rotates so each camper leads at least one segment per session.",
+    video:null, image:"https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=600&q=80",
+    link:null, linkLabel:null },
+  { title:"The Apology Circle", camp:"Camp Thunderbird", state:"SC", tag:"empathy",
+    desc:"A restorative practice where campers who have had a conflict are guided through a structured three-step conversation — share impact, listen fully, and decide together how to move forward.",
+    video:null, image:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80",
+    link:null, linkLabel:null }
+];
+// ============================================================
+
+// ── VIEW SWITCHING ──
+let currentView = 'map';
+function switchView(v) {
+  currentView = v;
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.toggle-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.getElementById('btn-'+v).classList.add('active');
+  if (v === 'grid') renderGrid();
+  sendHeight();
+}
+
+// ── GRID VIEW ──
+let activeTag = 'all';
+function setTag(btn) {
+  document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeTag = btn.dataset.tag;
+  renderGrid();
+}
+function ytThumb(url) {
+  if (!url) return null;
+  if (url.includes('youtube.com/embed/')) {
+    const id = url.split('/embed/')[1]?.split('?')[0];
+    return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+  }
+  return null;
+}
+function cardMedia(c) {
+  const src = c.image || (c.video ? ytThumb(c.video) : null);
+  if (src) return `<img class="card-img" src="${src}" alt="${c.title}" loading="lazy">`;
+  return `<div class="card-img-placeholder"><img src="${ACA_LOGO}" alt="ACA"></div>`;
+}
+function renderGrid() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const filtered = CAMPS.filter(c => {
+    const matchTag = activeTag === 'all' || c.tag === activeTag;
+    const matchQ = !q || [c.title,c.camp,c.state,c.desc].join(' ').toLowerCase().includes(q);
+    return matchTag && matchQ;
+  });
+  document.getElementById('main-count').textContent = filtered.length + ' program' + (filtered.length!==1?'s':'');
+  const grid = document.getElementById('grid');
+  if (!filtered.length) { grid.innerHTML='<div class="empty">No programs match your search.</div>'; return; }
+  grid.innerHTML = filtered.map(c => `
+    <div class="card" onclick="openModal(${CAMPS.indexOf(c)})">
+      ${cardMedia(c)}
+      <div class="card-body">
+        <div class="card-tag">${c.tag.charAt(0).toUpperCase()+c.tag.slice(1)}</div>
+        <div class="card-title">${c.title}</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-camp">${c.camp} &nbsp;·&nbsp; ${c.state}</div>
+      </div>
+    </div>
+  `).join('');
+  sendHeight();
+}
+
+// ── MODAL ──
+function openModal(i) {
+  const c = CAMPS[i];
+  allowedOrigins.forEach(origin => {
+    window.parent.postMessage({
+      type: 'openModal',
+      title: c.title,
+      tag: c.tag.charAt(0).toUpperCase()+c.tag.slice(1),
+      camp: `${c.camp} · ${c.state}`,
+      desc: c.desc,
+      image: c.image || null,
+      video: c.video || null,
+      link: c.link || null,
+      linkLabel: c.linkLabel || 'Learn More'
+    }, origin);
+  });
+}
+
+// ── MAP VIEW ──
+const stateCentroids = {
+  AL:[830,390],AK:[150,460],AZ:[195,340],AR:[700,360],CA:[110,280],CO:[310,280],
+  CT:[910,180],DE:[875,230],FL:[780,450],GA:[775,390],HI:[280,490],ID:[195,175],
+  IL:[700,240],IN:[735,255],IA:[640,215],KS:[560,300],KY:[745,295],LA:[685,415],
+  ME:[895,120],MD:[855,245],MA:[905,165],MI:[730,195],MN:[620,155],MS:[710,390],
+  MO:[660,295],MT:[275,145],NE:[520,245],NV:[165,260],NH:[890,150],NJ:[880,215],
+  NM:[285,355],NY:[845,185],NC:[810,330],ND:[520,145],OH:[775,245],OK:[560,355],
+  OR:[130,185],PA:[840,220],RI:[915,180],SC:[800,370],SD:[510,195],TN:[730,340],
+  TX:[520,415],UT:[240,275],VT:[875,155],VA:[830,280],WA:[145,140],WV:[800,275],
+  WI:[685,185],WY:[300,215]
+};
+const stateNameToAbbr = {
+  'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO',
+  'Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA','Hawaii':'HI','Idaho':'ID',
+  'Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS','Kentucky':'KY','Louisiana':'LA',
+  'Maine':'ME','Maryland':'MD','Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS',
+  'Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ',
+  'New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH','Oklahoma':'OK',
+  'Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD',
+  'Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA',
+  'West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'
+};
+const stateCounts = {};
+CAMPS.forEach(c => { stateCounts[c.state] = (stateCounts[c.state]||0)+1; });
+const activeStates = [...new Set(CAMPS.map(c=>c.state))].sort();
+let selectedState = null;
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+
+function renderMapSidebar() {
+  const sb = document.getElementById('map-sidebar');
+  sb.innerHTML = `<button class="state-btn${!selectedState?' active':''}" onclick="selectState(null)">All states</button>`;
+  activeStates.forEach(s => {
+    sb.innerHTML += `<button class="state-btn${selectedState===s?' active':''}" onclick="selectState('${s}')">
+      ${s} <span class="state-count">${stateCounts[s]}</span>
+    </button>`;
+  });
+}
+
+function renderMapCards() {
+  const filtered = selectedState ? CAMPS.filter(c=>c.state===selectedState) : CAMPS;
+  const el = document.getElementById('map-cards');
+  const n = filtered.length;
+  document.getElementById('map-count').textContent = n + ' program' + (n!==1?'s':'');
+  document.getElementById('map-label').textContent = selectedState
+    ? `in ${selectedState} — click again to clear`
+    : `across ${activeStates.length} states — click a state or pin to filter`;
+  document.getElementById('main-count').textContent = n + ' program' + (n!==1?'s':'');
+  if (!filtered.length) { el.innerHTML='<div class="empty">No programs for this state yet.</div>'; return; }
+  el.innerHTML = filtered.map(c => {
+    const src = c.image || (c.video ? ytThumb(c.video) : null);
+    return `<div class="mini-card" onclick="openModal(${CAMPS.indexOf(c)})">
+      ${src ? `<img src="${src}" alt="${c.title}" loading="lazy">` : `<div style="height:90px;background:#f5f5f5;display:flex;align-items:center;justify-content:center"><img src="${ACA_LOGO}" style="width:50%;opacity:.3" alt="ACA"></div>`}
+      <div class="mini-card-body">
+        <div class="mini-tag">${c.tag.charAt(0).toUpperCase()+c.tag.slice(1)}</div>
+        <div class="mini-title">${c.title}</div>
+        <div class="mini-camp">${c.camp} · ${c.state}</div>
+      </div>
+    </div>`;
+  }).join('');
+  sendHeight();
+}
+
+function selectState(s) {
+  selectedState = s;
+  renderMapSidebar();
+  renderMapCards();
+  d3.selectAll('.state-path').attr('fill', d => {
+    const abbr = stateNameToAbbr[d.properties.name];
+    if (!abbr || !stateCounts[abbr]) return isDark ? '#3a3a3a' : '#e8e6df';
+    if (selectedState && selectedState !== abbr) return '#9fd3de';
+    return '#007e9e';
+  });
+  d3.selectAll('.pin circle').attr('fill', d => selectedState && selectedState!==d ? 'rgba(0,126,158,.35)' : '#007e9e');
+}
+
+d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
+  const svg = d3.select('#map-svg');
+  const proj = d3.geoAlbersUsa().scale(1100).translate([450,280]);
+  const path = d3.geoPath(proj);
+
+  svg.selectAll('path')
+    .data(topojson.feature(us, us.objects.states).features)
+    .join('path')
+    .attr('class', d => {
+      const abbr = stateNameToAbbr[d.properties.name];
+      return 'state-path' + (abbr && stateCounts[abbr] ? ' has-camps' : '');
+    })
+    .attr('d', path)
+    .attr('stroke', isDark ? 'rgba(255,255,255,.15)' : '#fff')
+    .attr('stroke-width', 0.8)
+    .attr('fill', d => {
+      const abbr = stateNameToAbbr[d.properties.name];
+      return (abbr && stateCounts[abbr]) ? '#007e9e' : (isDark ? '#3a3a3a' : '#e8e6df');
+    })
+    .on('click', (e,d) => {
+      const abbr = stateNameToAbbr[d.properties.name];
+      if (abbr && stateCounts[abbr]) selectState(abbr===selectedState ? null : abbr);
+    })
+    .append('title').text(d => {
+      const abbr = stateNameToAbbr[d.properties.name];
+      const n = abbr && stateCounts[abbr];
+      return n ? `${d.properties.name}: ${n} program${n>1?'s':''}` : d.properties.name;
+    });
+
+  const pins = svg.selectAll('.pin')
+    .data(activeStates)
+    .join('g')
+    .attr('class','pin')
+    .attr('transform', s => {
+      const c = stateCentroids[s];
+      return c ? `translate(${c[0]},${c[1]})` : 'translate(-999,-999)';
+    })
+    .on('click', (e,s) => selectState(s===selectedState ? null : s));
+
+  pins.append('circle')
+    .attr('r', d => stateCounts[d] > 1 ? 11 : 8)
+    .attr('fill','#007e9e')
+    .attr('stroke','#fff')
+    .attr('stroke-width', 2)
+    .style('transition','r .15s');
+
+  pins.append('text')
+    .attr('text-anchor','middle')
+    .attr('dy','0.35em')
+    .attr('font-size', d => stateCounts[d] > 1 ? 9 : 0)
+    .attr('font-weight','700')
+    .attr('font-family','"DM Sans",sans-serif')
+    .attr('fill','#fff')
+    .attr('pointer-events','none')
+    .text(d => stateCounts[d] > 1 ? stateCounts[d] : '');
+
+  pins.append('title').text(d => `${d}: ${stateCounts[d]} program${stateCounts[d]>1?'s':''}`);
+
+  renderMapSidebar();
+  renderMapCards();
+});
+
+// ── AUTO-RESIZE ──
+const allowedOrigins = [
+  'https://dev-aca-d9.pantheonsite.io',
+  'https://www.acacamps.org',
+  'https://acacamps.org'
+];
+function sendHeight() {
+  const height = document.body.scrollHeight;
+  allowedOrigins.forEach(origin => {
+    window.parent.postMessage({ height }, origin);
+  });
+}
+window.addEventListener('load', sendHeight);
+window.addEventListener('resize', sendHeight);
+// Modal is rendered by parent Drupal page via postMessage
+</script>
+</body>
+</html>
