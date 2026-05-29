@@ -9,6 +9,13 @@
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:"DM Sans",sans-serif;background:#fff;color:#747474;position:relative}
     .page{max-width:1100px;margin:0 auto;padding:1.5rem}
+
+    /* ═══════════════════════════════════════════════
+       TOGGLE: uncomment either line below to hide
+       .controls { display: none; }   ← hides search + filter pills
+       .card-tag  { display: none; }  ← hides trait label on cards
+    ═══════════════════════════════════════════════ */
+
     .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1.5rem}
     .controls input{flex:1;min-width:200px;padding:9px 13px;border:1px solid #dcdcdc;border-radius:24px;font-size:15px;background:#fff;color:#747474}
     .controls input:focus{outline:none;border-color:#007e9e}
@@ -16,7 +23,7 @@
     .pill.active{background:#007e9e;border-color:#007e9e;color:#fff}
     .count{font-size:13px;color:#999;margin-left:auto}
 
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
 
     .card{
       display:flex;flex-direction:column;
@@ -98,7 +105,7 @@ const CAMPS = [
     link:"https://www.pineridgeadventurecamp.org", linkLabel:"Visit Camp Website" },
   { title:"Junior Council Program", camp:"Camp Horizon", state:"CO", tag:"leadership",
     desc:"Rising 9th graders shadow senior staff across all departments for a week, then plan and lead one all-camp event entirely on their own with minimal adult intervention.",
-    video:"https://player.vimeo.com/video/1082905370", image:"https://acacamps.box.com/shared/static/qzuhvbhkyi8os9q8pfdv2zge5oqs0sw5.jpg",
+    video:"https://www.youtube.com/embed/dQw4w9WgXcQ", image:null,
     link:"https://www.acacamps.org", linkLabel:"Learn More" },
   { title:"No-Brag Zone", camp:"Wildwood Arts Camp", state:"ME", tag:"integrity",
     desc:"A cabin norm-setting process focused on honesty and giving credit, sustained through weekly peer-accountability check-ins led by campers themselves without counselor prompting.",
@@ -154,8 +161,14 @@ const CAMPS = [
 let activeTag = "all";
 
 function ytThumb(url) {
-  const id = url.split('/embed/')[1]?.split('?')[0];
-  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+  if (!url) return null;
+  // YouTube
+  if (url.includes('youtube.com/embed/')) {
+    const id = url.split('/embed/')[1]?.split('?')[0];
+    return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+  }
+  // Vimeo — no public thumbnail without API call, fall through to ACA logo placeholder
+  return null;
 }
 
 function cardMedia(c) {
