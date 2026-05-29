@@ -48,12 +48,12 @@
     .state-btn{padding:7px 12px;border-radius:8px;border:0.5px solid #e8e6df;background:#fff;font-size:13px;font-family:"DM Sans",sans-serif;color:#555;cursor:pointer;text-align:left;transition:all .15s;display:flex;justify-content:space-between;align-items:center}
     .state-btn:hover,.state-btn.active{border-color:#007e9e;color:#007e9e}
     .state-count{font-weight:700;color:#007e9e;font-size:12px}
-    .map-cards{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;align-content:start}
+    .map-cards{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;align-content:start}
     .map-stat{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:13px;color:#747474}
     .map-stat-pill{background:#007e9e;color:#fff;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700}
 
     /* ── CARD GRID VIEW ── */
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
 
     /* ── SHARED CARD STYLES ── */
     .card{display:flex;flex-direction:column;width:100%;background:#fff;border:1px solid #dcdcdc;border-radius:16px;box-shadow:0 2px 20px 0 rgba(142,165,164,0.103);overflow:hidden;cursor:pointer;transition:background .2s,border-color .2s,box-shadow .2s;margin:0 auto}
@@ -89,20 +89,20 @@
 
   <!-- VIEW TOGGLE -->
   <div class="view-toggle">
-    <button class="toggle-btn active" id="btn-map" onclick="switchView('map')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l6-4 6 4 6-4v14l-6 4-6-4-6 4V7z"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="7" x2="15" y2="21"/></svg>
-      Map view
-    </button>
-    <button class="toggle-btn" id="btn-grid" onclick="switchView('grid')">
+    <button class="toggle-btn active" id="btn-grid" onclick="switchView('grid')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Grid view
+    </button>
+    <button class="toggle-btn" id="btn-map" onclick="switchView('map')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l6-4 6 4 6-4v14l-6 4-6-4-6 4V7z"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="7" x2="15" y2="21"/></svg>
+      Map view
     </button>
     <div class="view-divider"></div>
     <span class="count" id="main-count">15 programs</span>
   </div>
 
   <!-- MAP VIEW -->
-  <div class="view active" id="view-map">
+  <div class="view" id="view-map">
     <div class="map-stat">
       <span class="map-stat-pill" id="map-count">15 programs</span>
       <span id="map-label">across 12 states — click a state or pin to filter</span>
@@ -117,7 +117,7 @@
   </div>
 
   <!-- GRID VIEW -->
-  <div class="view" id="view-grid">
+  <div class="view active" id="view-grid">
     <div class="controls">
       <input type="text" id="search" placeholder="Search camps or programs…" oninput="renderGrid()">
       <button class="pill active" data-tag="all" onclick="setTag(this)">All</button>
@@ -207,7 +207,7 @@ const CAMPS = [
 // ============================================================
 
 // ── VIEW SWITCHING ──
-let currentView = 'map';
+let currentView = 'grid';
 function switchView(v) {
   currentView = v;
   document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
@@ -215,6 +215,7 @@ function switchView(v) {
   document.getElementById('view-'+v).classList.add('active');
   document.getElementById('btn-'+v).classList.add('active');
   if (v === 'grid') renderGrid();
+  if (v === 'map') initMap();
   sendHeight();
 }
 
@@ -284,15 +285,15 @@ function openModal(i) {
 
 // ── MAP VIEW ──
 const stateCentroids = {
-  AL:[830,390],AK:[150,460],AZ:[195,340],AR:[700,360],CA:[110,280],CO:[310,280],
-  CT:[910,180],DE:[875,230],FL:[780,450],GA:[775,390],HI:[280,490],ID:[195,175],
-  IL:[700,240],IN:[735,255],IA:[640,215],KS:[560,300],KY:[745,295],LA:[685,415],
-  ME:[895,120],MD:[855,245],MA:[905,165],MI:[730,195],MN:[620,155],MS:[710,390],
-  MO:[660,295],MT:[275,145],NE:[520,245],NV:[165,260],NH:[890,150],NJ:[880,215],
-  NM:[285,355],NY:[845,185],NC:[810,330],ND:[520,145],OH:[775,245],OK:[560,355],
-  OR:[130,185],PA:[840,220],RI:[915,180],SC:[800,370],SD:[510,195],TN:[730,340],
-  TX:[520,415],UT:[240,275],VT:[875,155],VA:[830,280],WA:[145,140],WV:[800,275],
-  WI:[685,185],WY:[300,215]
+  AL:[720,390],AK:[150,460],AZ:[195,340],AR:[655,365],CA:[115,295],CO:[310,285],
+  CT:[858,198],DE:[845,248],FL:[730,450],GA:[730,390],HI:[280,490],ID:[195,185],
+  IL:[675,265],IN:[710,270],IA:[620,235],KS:[545,315],KY:[715,310],LA:[655,420],
+  ME:[858,148],MD:[838,258],MA:[868,188],MI:[710,210],MN:[600,175],MS:[680,395],
+  MO:[645,308],MT:[275,158],NE:[510,258],NV:[168,275],NH:[852,175],NJ:[848,228],
+  NM:[285,365],NY:[818,205],NC:[778,340],ND:[510,165],OH:[748,268],OK:[545,368],
+  OR:[130,195],PA:[808,235],RI:[868,205],SC:[768,375],SD:[505,215],TN:[700,348],
+  TX:[515,420],UT:[238,288],VT:[845,178],VA:[795,295],WA:[148,155],WV:[775,295],
+  WI:[665,205],WY:[300,228]
 };
 const stateNameToAbbr = {
   'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO',
@@ -358,7 +359,11 @@ function selectState(s) {
   d3.selectAll('.pin circle').attr('fill', d => selectedState && selectedState!==d ? 'rgba(0,126,158,.35)' : '#007e9e');
 }
 
-d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
+let mapInitialized = false;
+function initMap() {
+  if (mapInitialized) return;
+  mapInitialized = true;
+  d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
   const svg = d3.select('#map-svg');
   const proj = d3.geoAlbersUsa().scale(1100).translate([450,280]);
   const path = d3.geoPath(proj);
@@ -398,16 +403,16 @@ d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
     .on('click', (e,s) => selectState(s===selectedState ? null : s));
 
   pins.append('circle')
-    .attr('r', d => stateCounts[d] > 1 ? 11 : 8)
+    .attr('r', d => stateCounts[d] > 1 ? 11 : 7)
     .attr('fill','#007e9e')
     .attr('stroke','#fff')
-    .attr('stroke-width', 2)
-    .style('transition','r .15s');
+    .attr('stroke-width', 1.5)
+    .style('transition','r .15s,fill .15s');
 
   pins.append('text')
     .attr('text-anchor','middle')
     .attr('dy','0.35em')
-    .attr('font-size', d => stateCounts[d] > 1 ? 9 : 0)
+    .attr('font-size', 9)
     .attr('font-weight','700')
     .attr('font-family','"DM Sans",sans-serif')
     .attr('fill','#fff')
@@ -418,7 +423,8 @@ d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
 
   renderMapSidebar();
   renderMapCards();
-});
+  });
+}
 
 // ── AUTO-RESIZE ──
 const allowedOrigins = [
