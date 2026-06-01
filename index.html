@@ -10,10 +10,13 @@
     body{font-family:"DM Sans",sans-serif;background:#fff;color:#747474;position:relative}
     .page{max-width:1100px;margin:0 auto;padding:1.5rem}
 
-
- .controls { display: none; }
-.card-tag  { display: none; }
-
+    /* ═══════════════════════════════════════════════
+       TOGGLE: to hide filters and trait labels, add
+       class="hide-filters" to the <body> tag below.
+       To show them, remove the class.
+    ═══════════════════════════════════════════════ */
+    body.hide-filters .controls { display: none; }
+    body.hide-filters .card-tag  { display: none; }
 
     .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1.5rem}
     .controls input{flex:1;min-width:200px;padding:9px 13px;border:1px solid #dcdcdc;border-radius:24px;font-size:15px;background:#fff;color:#747474}
@@ -69,7 +72,7 @@
     .empty{text-align:center;color:#999;font-size:14px;padding:3rem;grid-column:1/-1}
 </style>
 </head>
-<body>
+<body class="hide-filters">
 
 <div class="page">
   <div class="controls">
@@ -103,8 +106,8 @@ const CAMPS = [
     video:null, image:"https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=80",
     link:"https://www.pineridgeadventurecamp.org", linkLabel:"Visit Camp Website" },
   { title:"Junior Council Program", camp:"Camp Horizon", state:"CO", tag:"leadership",
-    desc:"Nullam proin dictum nisl netus rutrum. Taciti ultrices condimentum sagittis vitae nullam. Egestas nunc parturient libero a volutpat curae. Libero quis si arcu tristique hendrerit neque senectus duis id. Elementum per egestas id mollis sociosqu. Ultricies quis hac habitasse nisl dictumst elementum nostra ex molestie faucibus. Quam ornare eget rutrum laoreet ac suscipit ut. Ex suspendisse mollis ultricies condimentum primis. Scelerisque dui eleifend aliquet torquent aptent praesent nullam maximus primis.",
-    video:"https://www.youtube.com/embed/wiMmH5Ypibc", image:null,
+    desc:"Rising 9th graders shadow senior staff across all departments for a week, then plan and lead one all-camp event entirely on their own with minimal adult intervention.",
+    video:"https://www.youtube.com/embed/dQw4w9WgXcQ", image:null,
     link:"https://www.acacamps.org", linkLabel:"Learn More" },
   { title:"No-Brag Zone", camp:"Wildwood Arts Camp", state:"ME", tag:"integrity",
     desc:"A cabin norm-setting process focused on honesty and giving credit, sustained through weekly peer-accountability check-ins led by campers themselves without counselor prompting.",
@@ -214,7 +217,7 @@ function openModal(i) {
     window.parent.postMessage({
       type: 'openModal',
       title: c.title,
-      tag: c.tag.charAt(0).toUpperCase()+c.tag.slice(1),
+      // tag: c.tag.charAt(0).toUpperCase()+c.tag.slice(1),  // ← uncomment to show tag in modal
       camp: `${c.camp} · ${c.state}`,
       desc: c.desc,
       image: c.image || null,
